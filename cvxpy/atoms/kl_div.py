@@ -42,9 +42,10 @@ class kl_div(Atom):
     def shape_from_args(self):
         return u.Shape(1, 1)
 
-    # Always unknown.
+    # Always positive (well, in the same sense that square is always positive)
     def sign_from_args(self):
-        return u.Sign.UNKNOWN
+        return u.Sign.POSITIVE
+        #return u.Sign.UNKNOWN
 
     # Default curvature.
     def func_curvature(self):
