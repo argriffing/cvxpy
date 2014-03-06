@@ -20,6 +20,7 @@ along with CVXPY.  If not, see <http://www.gnu.org/licenses/>.
 from nonlinear import NonlinearConstraint
 import math
 import cvxopt
+import numpy as np
 
 class ExpCone(NonlinearConstraint):
     """An exponential cone constraint.
@@ -68,11 +69,21 @@ class ExpCone(NonlinearConstraint):
             return ExpCone.size[0], cvxopt.matrix([0.0, 1.0, 1.0])
         # Unpack vars_
         x, y, z = vars_
-        # Out of domain.
-        if y < 0.0 or y == 0.0 and (x > 0.0 or z < 0.0):
-            return None
+        # Check out of domain
+        ood = (y < 0.0 or y == 0.0 and (x > 0.0 or z < 0.0))
         # Evaluate the function.
         f = y*math.exp(x/y) - z
+        print 'x:', x
+        print 'y:', y
+        print 'z:', z
+        if ood:
+            print 'out of domain'
+        else:
+            print 'y exp(x/y):', y*math.exp(x/y)
+            print 'f = y exp(x/y) - z:', f
+        # Out of domain.
+        if ood:
+            return None
         # Compute the gradient.
         Df = cvxopt.matrix([math.exp(x/y),
                             math.exp(x/y)*(1-x/y),
@@ -85,4 +96,7 @@ class ExpCone(NonlinearConstraint):
                 [-x/y**2, x**2/y**3, 0.0],
                 [0.0, 0.0, 0.0],
             ])
+        print 'H:'
+        print H
+        print
         return f, Df, scaling*H
