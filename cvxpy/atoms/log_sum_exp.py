@@ -37,7 +37,11 @@ class log_sum_exp(Atom):
     def numeric(self, values):
         exp_mat = np.exp(values[0])
         exp_sum = exp_mat.sum(axis = 1).sum(axis = 0)
-        return np.log(exp_sum)
+        result = np.log(exp_sum)
+        print(values)
+        print(result)
+        print()
+        return result
 
     # Resolves to a scalar.
     def shape_from_args(self):
